@@ -1,0 +1,3 @@
+db.url=jdbc:mysql://localhost:3306/devpilot
+db.username=your_username
+db.password=your_password
