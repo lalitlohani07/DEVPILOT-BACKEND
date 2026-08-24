@@ -1,7 +1,7 @@
 package com.lalit.devpilot.model;
 
 public enum EmploymentStatus {
-    CURRENTLY_WORKING,
+    ACTIVE,
 
-    CURRENTLY_INACTIVE
+    INACTIVE
 }

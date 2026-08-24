@@ -12,7 +12,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.role = role;
-        this.employmentStatus = EmploymentStatus.CURRENTLY_WORKING;
+        this.employmentStatus = EmploymentStatus.ACTIVE;
     }
 
     public User(int id, String name, String email, Role role, EmploymentStatus employmentStatus) {
