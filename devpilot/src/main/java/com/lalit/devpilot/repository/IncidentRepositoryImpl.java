@@ -109,20 +109,28 @@ WHERE id = ?
 
                 if (resultSet.next()) {
 
-                    Incident incident = new Incident(
-                            resultSet.getInt("id"),
-                            resultSet.getString("title"),
-                            resultSet.getString("description"),
-                            Severity.valueOf(resultSet.getString("severity")),
-                            Status.valueOf(resultSet.getString("status")),
-                            userRepository.findById(
-                                    resultSet.getInt("reported_by_id")).orElse(null),
-                            userRepository.findById(
-                                    resultSet.getInt("assigned_to_id")).orElse(null),
-                            resultSet.getTimestamp("created_at").toLocalDateTime(),
-                            resultSet.getTimestamp("updated_at").toLocalDateTime());
-                    return Optional.of(incident);
-                }
+    int assignedToId = resultSet.getInt("assigned_to_id");
+
+    User assignedTo = resultSet.wasNull()
+            ? null
+            : userRepository.findById(assignedToId).orElse(null);
+
+    Incident incident = new Incident(
+            resultSet.getInt("id"),
+            resultSet.getString("title"),
+            resultSet.getString("description"),
+            Severity.valueOf(resultSet.getString("severity")),
+            Status.valueOf(resultSet.getString("status")),
+            userRepository.findById(
+                    resultSet.getInt("reported_by_id")
+            ).orElse(null),
+            assignedTo,
+            resultSet.getTimestamp("created_at").toLocalDateTime(),
+            resultSet.getTimestamp("updated_at").toLocalDateTime()
+    );
+
+    return Optional.of(incident);
+}
                 return Optional.empty();
             }
 
@@ -159,26 +167,30 @@ FROM incidents
         ResultSet resultSet = statement.executeQuery()
     ) {
 
-        while (resultSet.next()) {
+       while (resultSet.next()) {
 
-            Incident incident = new Incident(
-                    resultSet.getInt("id"),
-                    resultSet.getString("title"),
-                    resultSet.getString("description"),
-                    Severity.valueOf(resultSet.getString("severity")),
-                    Status.valueOf(resultSet.getString("status")),
-                    userRepository.findById(
-                            resultSet.getInt("reported_by_id")
-                    ).orElse(null),
-                    userRepository.findById(
-                            resultSet.getInt("assigned_to_id")
-                    ).orElse(null),
-                    resultSet.getTimestamp("created_at").toLocalDateTime(),
-                    resultSet.getTimestamp("updated_at").toLocalDateTime()
-            );
+    int assignedToId = resultSet.getInt("assigned_to_id");
 
-            incidents.add(incident);
-        }
+    User assignedTo = resultSet.wasNull()
+            ? null
+            : userRepository.findById(assignedToId).orElse(null);
+
+    Incident incident = new Incident(
+            resultSet.getInt("id"),
+            resultSet.getString("title"),
+            resultSet.getString("description"),
+            Severity.valueOf(resultSet.getString("severity")),
+            Status.valueOf(resultSet.getString("status")),
+            userRepository.findById(
+                    resultSet.getInt("reported_by_id")
+            ).orElse(null),
+            assignedTo,
+            resultSet.getTimestamp("created_at").toLocalDateTime(),
+            resultSet.getTimestamp("updated_at").toLocalDateTime()
+    );
+
+    incidents.add(incident);
+}
 
         return incidents;
 
@@ -223,6 +235,25 @@ public boolean update(Incident incident) {
 
     } catch (SQLException e) {
         throw new DataAccessException("Failed to update incident.", e);
+    }
+}
+@Override
+public boolean delete(int id) {
+
+    String sql = """
+            DELETE FROM incidents WHERE id = ?
+            """;
+
+    try (
+        Connection connection = dataSource.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)
+    ) {
+        statement.setInt(1, id);
+        int rowsAffected = statement.executeUpdate();
+        return rowsAffected > 0;
+
+    } catch (SQLException e) {
+        throw new DataAccessException("Failed to delete incident with id: " + id, e);
     }
 }
 }

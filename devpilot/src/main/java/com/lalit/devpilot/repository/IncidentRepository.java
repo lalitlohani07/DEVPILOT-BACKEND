@@ -15,4 +15,5 @@ public interface IncidentRepository {
     List<Incident> findAll();
 
     boolean update(Incident incident);
+    boolean delete(int id);
 }
