@@ -6,4 +6,3 @@ package com.lalit.devpilot.exception;
         super(message, cause);
     }
 }
-

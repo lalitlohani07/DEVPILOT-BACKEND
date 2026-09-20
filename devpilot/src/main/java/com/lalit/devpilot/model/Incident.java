@@ -108,7 +108,13 @@ public class Incident {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+}
 
+public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+}
     @Override
     public String toString() {
         return "Incident{" +
