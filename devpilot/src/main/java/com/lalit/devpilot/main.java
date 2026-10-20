@@ -59,31 +59,35 @@
 //     Optional<User> deactivatedUser = repository.findById(3);
 //     System.out.println("after delete: " + deactivatedUser);
 // }
-//}
 package com.lalit.devpilot;
 
-import com.lalit.devpilot.config.appConfig;
 import com.lalit.devpilot.exception.IncidentNotFoundException;
 import com.lalit.devpilot.model.*;
 import com.lalit.devpilot.repository.UserRepository;
 import com.lalit.devpilot.service.IncidentService;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+// import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import java.util.List;
 import java.util.Optional;
 
-public class main {
+public class main{
 
     public static void main(String[] args) {
 
-        try (AnnotationConfigApplicationContext context =
-                     new AnnotationConfigApplicationContext(appConfig.class)) {
+        // ConfigurableApplicationContext context =
+        //         SpringApplication.run(DevPilotApplication.class, args);
+             try (ConfigurableApplicationContext context =
+                SpringApplication.run(DevPilotApplication.class, args)) {
 
-            UserRepository userRepository =
-                    context.getBean(UserRepository.class);
+        UserRepository userRepository =
+                context.getBean(UserRepository.class);
 
-            IncidentService incidentService =
-                    context.getBean(IncidentService.class);
+        IncidentService incidentService =
+                context.getBean(IncidentService.class);
 
             // ============================================================
             // SETUP
@@ -542,6 +546,11 @@ public class main {
             System.out.println("\n========================================");
             System.out.println("SERVICE LAYER TEST COMPLETED");
             System.out.println("========================================");
-        }
+        
+
+         context.close();
     }
 }
+}
+
+

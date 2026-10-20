@@ -1,18 +1,59 @@
 package com.lalit.devpilot.model;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;  
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+//import jakarta.persistence.FetchType;
+import static jakarta.persistence.FetchType.LAZY;
+import org.hibernate.annotations.Generated;
+import org.hibernate.generator.EventType;
+@Entity 
+@Table(name = "incidents")
 public class Incident {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String title;
-    private String description;
-    private Severity severity;
-    private Status status;
-    private User reportedBy;
-    private User assignedTo;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
+    @Column(name = "title", nullable = false, length = 200)
+private String title;
+
+@Column(name = "description", columnDefinition = "TEXT")
+private String description;
+
+  @Enumerated(EnumType.STRING)
+@Column(name = "severity", nullable = false, length = 50)
+private Severity severity;
+
+   @Enumerated(EnumType.STRING)
+@Column(name = "status", nullable = false, length = 50)
+private Status status;
+
+    @ManyToOne(fetch = LAZY, optional = false)
+    @JoinColumn(name = "reported_by_id", nullable = false)
+    private User reportedBy;
+
+    @ManyToOne(fetch = LAZY)
+@JoinColumn(name = "assigned_to_id")
+private User assignedTo;
+    
+    @Generated 
+    @Column(name = "created_at", insertable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+
+@Generated(event = {EventType.INSERT, EventType.UPDATE})
+@Column(name = "updated_at", insertable = false, updatable = false)
+private LocalDateTime updatedAt;
+    protected Incident(){
+
+    }
     public Incident(String title,
             String description,
             Severity severity,

@@ -1,13 +1,41 @@
 package com.lalit.devpilot.model;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+@Entity
+@Table(name = "users")
 public class User {
+@Id
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
+
+    @Column(name = "email", nullable = false, length = 100, unique = true)
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false, length = 50)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "employment_status", nullable = false, length = 20)
     private EmploymentStatus employmentStatus;
 
+    // private int id;
+    // private String name;
+    // private String email;
+    // private Role role;
+    // private EmploymentStatus employmentStatus;
+protected User() {
+}
     public User(String name, String email, Role role) {
         this.name = name;
         this.email = email;
