@@ -17,7 +17,7 @@
        └── return saved Incident */
 
 package com.lalit.devpilot.service;
-
+import org.springframework.transaction.annotation.Transactional;
 import com.lalit.devpilot.repository.IncidentRepository;
 import com.lalit.devpilot.repository.IncidentEventRepository;
 import com.lalit.devpilot.model.Severity;
@@ -45,7 +45,10 @@ public class IncidentServiceImpl implements IncidentService {
           this.incidentRepository = incidentRepository;
           this.incidentEventRepository = incidentEventRepository;
      }
-     @Override
+
+      @Override
+     @Transactional
+     
 public Incident reportIncident(
         String title,
         String description,
@@ -100,7 +103,9 @@ assignIncident(incidentId, assignee, actor)
         ↓
    return incident 
    */
-  @Override 
+   @Override
+  @Transactional
+  
 public Incident assignIncident(int incidentId, User assignee, User actor){
       Incident incident = incidentRepository.findById(incidentId)
         .orElseThrow(() ->
@@ -194,9 +199,9 @@ changeStatus(incidentId, newStatus, actor, note)
                     Status.INVESTIGATING
             )
     );
-
-
-    @Override
+ @Override
+    @Transactional
+   
     public Incident changeStatus(
             int incidentId,
             Status newStatus,
@@ -260,16 +265,19 @@ changeStatus(incidentId, newStatus, actor, note)
         return incident;
     }
     @Override
+    @Transactional(readOnly = true)
 public Optional<Incident> getIncident(int incidentId) {
     return incidentRepository.findById(incidentId);
 }
 
 @Override
+@Transactional(readOnly = true)
 public List<Incident> getAllIncidents() {
     return incidentRepository.findAll();
 }
 
 @Override
+@Transactional(readOnly = true)
 public List<IncidentEvent> getIncidentTimeline(int incidentId) {
     return incidentEventRepository.findByIncidentId(incidentId);
 }
