@@ -9,7 +9,8 @@ import com.lalit.devpilot.model.User;
 
 public interface IncidentService {
 
-    Incident reportIncident(String title, String description, Severity severity, User reportedBy);
+    Incident reportIncident(String title, String description,
+               Severity severity, Integer reportedById);
 
     Incident assignIncident(int incidentId, User assignee, User actor);
 
