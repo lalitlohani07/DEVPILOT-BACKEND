@@ -68,7 +68,7 @@ public class IncidentController {
                 request.title(),
                 request.description(),
                 request.severity(),
-                reporter);
+                reporter.getId());
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
