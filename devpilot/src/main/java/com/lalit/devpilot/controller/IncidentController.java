@@ -44,15 +44,22 @@ public class IncidentController {
                 .toList();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<IncidentResponse> getIncident(
-            @PathVariable int id) {
+    // @GetMapping("/{id}")
+    // public ResponseEntity<IncidentResponse> getIncident(
+    //         @PathVariable int id) {
 
-        return incidentService.getIncident(id)
-                .map(this::toResponse)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+    //     return incidentService.getIncident(id)
+    //             .map(this::toResponse)
+    //             .map(ResponseEntity::ok)
+    //             .orElseGet(() -> ResponseEntity.notFound().build());
+    // }
+    @GetMapping("/{id}")
+public ResponseEntity<IncidentResponse> getIncident(
+        @PathVariable int id) {
+
+    Incident incident = incidentService.getIncident(id);
+    return ResponseEntity.ok(toResponse(incident));
+}
 // =============================================== post mapping 
 
     @PostMapping

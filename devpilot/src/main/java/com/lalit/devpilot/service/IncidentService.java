@@ -16,7 +16,7 @@ public interface IncidentService {
 
     Incident changeStatus(int incidentId, Status newStatus, User actor, String note);
 
-    Optional<Incident> getIncident(int incidentId);
+    Incident getIncident(int incidentId);
 
     List<Incident> getAllIncidents();
 

@@ -59,498 +59,498 @@
 //     Optional<User> deactivatedUser = repository.findById(3);
 //     System.out.println("after delete: " + deactivatedUser);
 // }
-package com.lalit.devpilot;
+// package com.lalit.devpilot;
 
-import com.lalit.devpilot.exception.IncidentNotFoundException;
-import com.lalit.devpilot.model.*;
-import com.lalit.devpilot.repository.UserRepository;
-import com.lalit.devpilot.service.IncidentService;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+// import com.lalit.devpilot.exception.IncidentNotFoundException;
+// import com.lalit.devpilot.model.*;
+// import com.lalit.devpilot.repository.UserRepository;
+// import com.lalit.devpilot.service.IncidentService;
+// import org.springframework.boot.SpringApplication;
 // import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-import java.util.List;
-import java.util.Optional;
-
-public class main{
+// // import org.springframework.context.ConfigurableApplicationContext;
+// import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+// import org.springframework.boot.SpringApplication;
+// import org.springframework.context.ConfigurableApplicationContext;
+// import java.util.List;
+// import java.util.Optional;
+
+// public class main{
 
-    public static void main(String[] args) {
-
-        // ConfigurableApplicationContext context =
-        //         SpringApplication.run(DevPilotApplication.class, args);
-             try (ConfigurableApplicationContext context =
-                SpringApplication.run(DevPilotApplication.class, args)) {
+//     public static void main(String[] args) {
+
+//         // ConfigurableApplicationContext context =
+//         //         SpringApplication.run(DevPilotApplication.class, args);
+//              try (ConfigurableApplicationContext context =
+//                 SpringApplication.run(DevPilotApplication.class, args)) {
 
-        UserRepository userRepository =
-                context.getBean(UserRepository.class);
+//         UserRepository userRepository =
+//                 context.getBean(UserRepository.class);
 
-        IncidentService incidentService =
-                context.getBean(IncidentService.class);
+//         IncidentService incidentService =
+//                 context.getBean(IncidentService.class);
 
-            // ============================================================
-            // SETUP
-            // ============================================================
+//             // ============================================================
+//             // SETUP
+//             // ============================================================
 
-            String uniqueId = String.valueOf(System.currentTimeMillis());
+//             String uniqueId = String.valueOf(System.currentTimeMillis());
 
-            User reporter = userRepository.save(
-                    new User(
-                            "Reporter Dev",
-                            "reporter" + uniqueId + "@devpilot.com",
-                            Role.DEVELOPER
-                    )
-            );
+//             User reporter = userRepository.save(
+//                     new User(
+//                             "Reporter Dev",
+//                             "reporter" + uniqueId + "@devpilot.com",
+//                             Role.DEVELOPER
+//                     )
+//             );
 
-            User oncallEngineer = userRepository.save(
-                    new User(
-                            "Oncall Eng",
-                            "oncall" + uniqueId + "@devpilot.com",
-                            Role.ON_CALL_ENGINEER
-                    )
-            );
+//             User oncallEngineer = userRepository.save(
+//                     new User(
+//                             "Oncall Eng",
+//                             "oncall" + uniqueId + "@devpilot.com",
+//                             Role.ON_CALL_ENGINEER
+//                     )
+//             );
 
-            System.out.println("========================================");
-            System.out.println("SERVICE LAYER TEST");
-            System.out.println("========================================");
+//             System.out.println("========================================");
+//             System.out.println("SERVICE LAYER TEST");
+//             System.out.println("========================================");
 
-            System.out.println("\nReporter: " + reporter);
-            System.out.println("On-call engineer: " + oncallEngineer);
+//             System.out.println("\nReporter: " + reporter);
+//             System.out.println("On-call engineer: " + oncallEngineer);
 
 
-            // ============================================================
-            // 1. REPORT INCIDENT
-            // ============================================================
+//             // ============================================================
+//             // 1. REPORT INCIDENT
+//             // ============================================================
 
-            System.out.println("\n========== 1. REPORT INCIDENT ==========");
+//             System.out.println("\n========== 1. REPORT INCIDENT ==========");
 
-            Incident incident = incidentService.reportIncident(
-                    "Payment service down",
-                    "Users unable to complete checkout",
-                    Severity.CRITICAL,
-                    reporter
-            );
+//             Incident incident = incidentService.reportIncident(
+//                     "Payment service down",
+//                     "Users unable to complete checkout",
+//                     Severity.CRITICAL,
+//                     reporter
+//             );
 
-            System.out.println("Created incident: " + incident);
-            System.out.println("Generated ID: " + incident.getId());
-            System.out.println("Initial status: " + incident.getStatus());
+//             System.out.println("Created incident: " + incident);
+//             System.out.println("Generated ID: " + incident.getId());
+//             System.out.println("Initial status: " + incident.getStatus());
 
-            if (incident.getId() > 0) {
-                System.out.println("[PASS] Incident received generated ID");
-            } else {
-                System.out.println("[FAIL] Incident ID was not generated");
-            }
+//             if (incident.getId() > 0) {
+//                 System.out.println("[PASS] Incident received generated ID");
+//             } else {
+//                 System.out.println("[FAIL] Incident ID was not generated");
+//             }
 
-            if (incident.getStatus() == Status.OPEN) {
-                System.out.println("[PASS] Initial status is OPEN");
-            } else {
-                System.out.println("[FAIL] Initial status is not OPEN");
-            }
+//             if (incident.getStatus() == Status.OPEN) {
+//                 System.out.println("[PASS] Initial status is OPEN");
+//             } else {
+//                 System.out.println("[FAIL] Initial status is not OPEN");
+//             }
 
 
-            // ============================================================
-            // 2. ASSIGN INCIDENT
-            // ============================================================
+//             // ============================================================
+//             // 2. ASSIGN INCIDENT
+//             // ============================================================
 
-            System.out.println("\n========== 2. ASSIGN INCIDENT ==========");
+//             System.out.println("\n========== 2. ASSIGN INCIDENT ==========");
 
-            Incident assigned = incidentService.assignIncident(
-                    incident.getId(),
-                    oncallEngineer,
-                    reporter
-            );
+//             Incident assigned = incidentService.assignIncident(
+//                     incident.getId(),
+//                     oncallEngineer,
+//                     reporter
+//             );
 
-            System.out.println("Assigned incident: " + assigned);
-            System.out.println("Assigned to: "
-                    + assigned.getAssignedTo().getName());
+//             System.out.println("Assigned incident: " + assigned);
+//             System.out.println("Assigned to: "
+//                     + assigned.getAssignedTo().getName());
 
-            if (assigned.getAssignedTo().getId()
-                    == oncallEngineer.getId()) {
+//             if (assigned.getAssignedTo().getId()
+//                     == oncallEngineer.getId()) {
 
-                System.out.println(
-                        "[PASS] Incident assigned to correct engineer"
-                );
+//                 System.out.println(
+//                         "[PASS] Incident assigned to correct engineer"
+//                 );
 
-            } else {
+//             } else {
 
-                System.out.println(
-                        "[FAIL] Incident assigned to wrong engineer"
-                );
-            }
+//                 System.out.println(
+//                         "[FAIL] Incident assigned to wrong engineer"
+//                 );
+//             }
 
 
-            // ============================================================
-            // 3. DUPLICATE ASSIGNMENT
-            // ============================================================
+//             // ============================================================
+//             // 3. DUPLICATE ASSIGNMENT
+//             // ============================================================
 
-            System.out.println("\n========== 3. DUPLICATE ASSIGNMENT ==========");
+//             System.out.println("\n========== 3. DUPLICATE ASSIGNMENT ==========");
 
-            try {
+//             try {
 
-                incidentService.assignIncident(
-                        incident.getId(),
-                        oncallEngineer,
-                        reporter
-                );
+//                 incidentService.assignIncident(
+//                         incident.getId(),
+//                         oncallEngineer,
+//                         reporter
+//                 );
 
-                System.out.println(
-                        "[FAIL] Duplicate assignment was allowed"
-                );
-
-            } catch (IllegalArgumentException e) {
+//                 System.out.println(
+//                         "[FAIL] Duplicate assignment was allowed"
+//                 );
 
-                System.out.println(
-                        "[PASS] Duplicate assignment blocked: "
-                                + e.getMessage()
-                );
-            }
-
-
-            // ============================================================
-            // 4. VALID STATUS TRANSITION
-            // OPEN -> INVESTIGATING
-            // ============================================================
-
-            System.out.println("\n========== 4. VALID STATUS CHANGE ==========");
-
-            Incident investigating = incidentService.changeStatus(
-                    incident.getId(),
-                    Status.INVESTIGATING,
-                    oncallEngineer,
-                    "Started investigating payment gateway logs"
-            );
-
-            System.out.println(
-                    "New status: " + investigating.getStatus()
-            );
+//             } catch (IllegalArgumentException e) {
 
-            if (investigating.getStatus() == Status.INVESTIGATING) {
-
-                System.out.println(
-                        "[PASS] OPEN -> INVESTIGATING succeeded"
-                );
+//                 System.out.println(
+//                         "[PASS] Duplicate assignment blocked: "
+//                                 + e.getMessage()
+//                 );
+//             }
 
-            } else {
 
-                System.out.println(
-                        "[FAIL] Status did not change correctly"
-                );
-            }
-
+//             // ============================================================
+//             // 4. VALID STATUS TRANSITION
+//             // OPEN -> INVESTIGATING
+//             // ============================================================
+
+//             System.out.println("\n========== 4. VALID STATUS CHANGE ==========");
+
+//             Incident investigating = incidentService.changeStatus(
+//                     incident.getId(),
+//                     Status.INVESTIGATING,
+//                     oncallEngineer,
+//                     "Started investigating payment gateway logs"
+//             );
+
+//             System.out.println(
+//                     "New status: " + investigating.getStatus()
+//             );
 
-            // ============================================================
-            // 5. INVALID STATUS TRANSITION
-            // INVESTIGATING -> CLOSED
-            // ============================================================
+//             if (investigating.getStatus() == Status.INVESTIGATING) {
 
-            System.out.println("\n========== 5. INVALID STATUS CHANGE ==========");
-
-            try {
+//                 System.out.println(
+//                         "[PASS] OPEN -> INVESTIGATING succeeded"
+//                 );
 
-                incidentService.changeStatus(
-                        incident.getId(),
-                        Status.CLOSED,
-                        oncallEngineer,
-                        "Skipping ahead"
-                );
+//             } else {
 
-                System.out.println(
-                        "[FAIL] Invalid transition was allowed"
-                );
+//                 System.out.println(
+//                         "[FAIL] Status did not change correctly"
+//                 );
+//             }
 
-            } catch (IllegalArgumentException e) {
 
-                System.out.println(
-                        "[PASS] Invalid transition blocked: "
-                                + e.getMessage()
-                );
-            }
+//             // ============================================================
+//             // 5. INVALID STATUS TRANSITION
+//             // INVESTIGATING -> CLOSED
+//             // ============================================================
 
+//             System.out.println("\n========== 5. INVALID STATUS CHANGE ==========");
 
-            // ============================================================
-            // 6. VALID STATUS CHAIN
-            //
-            // INVESTIGATING
-            //       ↓
-            // IDENTIFIED
-            //       ↓
-            // MONITORING
-            //       ↓
-            // RESOLVED
-            //       ↓
-            // CLOSED
-            // ============================================================
+//             try {
 
-            System.out.println("\n========== 6. STATUS LIFECYCLE ==========");
+//                 incidentService.changeStatus(
+//                         incident.getId(),
+//                         Status.CLOSED,
+//                         oncallEngineer,
+//                         "Skipping ahead"
+//                 );
 
-            incidentService.changeStatus(
-                    incident.getId(),
-                    Status.IDENTIFIED,
-                    oncallEngineer,
-                    "Found root cause: expired API key"
-            );
+//                 System.out.println(
+//                         "[FAIL] Invalid transition was allowed"
+//                 );
 
-            incidentService.changeStatus(
-                    incident.getId(),
-                    Status.MONITORING,
-                    oncallEngineer,
-                    "Rotated key, watching metrics"
-            );
+//             } catch (IllegalArgumentException e) {
 
-            incidentService.changeStatus(
-                    incident.getId(),
-                    Status.RESOLVED,
-                    oncallEngineer,
-                    "Confirmed stable for 30 minutes"
-            );
+//                 System.out.println(
+//                         "[PASS] Invalid transition blocked: "
+//                                 + e.getMessage()
+//                 );
+//             }
 
-            Incident closed = incidentService.changeStatus(
-                    incident.getId(),
-                    Status.CLOSED,
-                    oncallEngineer,
-                    "Postmortem complete"
-            );
 
-            System.out.println(
-                    "Final status: " + closed.getStatus()
-            );
+//             // ============================================================
+//             // 6. VALID STATUS CHAIN
+//             //
+//             // INVESTIGATING
+//             //       ↓
+//             // IDENTIFIED
+//             //       ↓
+//             // MONITORING
+//             //       ↓
+//             // RESOLVED
+//             //       ↓
+//             // CLOSED
+//             // ============================================================
 
-            if (closed.getStatus() == Status.CLOSED) {
+//             System.out.println("\n========== 6. STATUS LIFECYCLE ==========");
 
-                System.out.println(
-                        "[PASS] Complete status lifecycle succeeded"
-                );
+//             incidentService.changeStatus(
+//                     incident.getId(),
+//                     Status.IDENTIFIED,
+//                     oncallEngineer,
+//                     "Found root cause: expired API key"
+//             );
 
-            } else {
+//             incidentService.changeStatus(
+//                     incident.getId(),
+//                     Status.MONITORING,
+//                     oncallEngineer,
+//                     "Rotated key, watching metrics"
+//             );
 
-                System.out.println(
-                        "[FAIL] Incident did not reach CLOSED"
-                );
-            }
+//             incidentService.changeStatus(
+//                     incident.getId(),
+//                     Status.RESOLVED,
+//                     oncallEngineer,
+//                     "Confirmed stable for 30 minutes"
+//             );
 
+//             Incident closed = incidentService.changeStatus(
+//                     incident.getId(),
+//                     Status.CLOSED,
+//                     oncallEngineer,
+//                     "Postmortem complete"
+//             );
 
-            // ============================================================
-            // 7. NONEXISTENT INCIDENT
-            // ============================================================
+//             System.out.println(
+//                     "Final status: " + closed.getStatus()
+//             );
 
-            System.out.println(
-                    "\n========== 7. NONEXISTENT INCIDENT =========="
-            );
+//             if (closed.getStatus() == Status.CLOSED) {
 
-            try {
+//                 System.out.println(
+//                         "[PASS] Complete status lifecycle succeeded"
+//                 );
 
-                incidentService.assignIncident(
-                        99999,
-                        oncallEngineer,
-                        reporter
-                );
+//             } else {
 
-                System.out.println(
-                        "[FAIL] Expected IncidentNotFoundException"
-                );
+//                 System.out.println(
+//                         "[FAIL] Incident did not reach CLOSED"
+//                 );
+//             }
 
-            } catch (IncidentNotFoundException e) {
 
-                System.out.println(
-                        "[PASS] IncidentNotFoundException correctly thrown: "
-                                + e.getMessage()
-                );
-            }
-
-
-            // ============================================================
-            // 8. BLANK STATUS NOTE
-            // ============================================================
-
-            System.out.println(
-                    "\n========== 8. BLANK STATUS NOTE =========="
-            );
-
-            try {
-
-                incidentService.changeStatus(
-                        incident.getId(),
-                        Status.INVESTIGATING,
-                        oncallEngineer,
-                        "   "
-                );
-
-                System.out.println(
-                        "[FAIL] Blank note was allowed"
-                );
-
-            } catch (IllegalArgumentException e) {
-
-                System.out.println(
-                        "[PASS] Blank note correctly rejected: "
-                                + e.getMessage()
-                );
-            }
-
-
-            // ============================================================
-            // 9. NULL NEW STATUS
-            // ============================================================
-
-            System.out.println(
-                    "\n========== 9. NULL STATUS =========="
-            );
-
-            try {
-
-                incidentService.changeStatus(
-                        incident.getId(),
-                        null,
-                        oncallEngineer,
-                        "Trying null status"
-                );
-
-                System.out.println(
-                        "[FAIL] Null status was allowed"
-                );
+//             // ============================================================
+//             // 7. NONEXISTENT INCIDENT
+//             // ============================================================
 
-            } catch (IllegalArgumentException e) {
+//             System.out.println(
+//                     "\n========== 7. NONEXISTENT INCIDENT =========="
+//             );
 
-                System.out.println(
-                        "[PASS] Null status correctly rejected: "
-                                + e.getMessage()
-                );
-            }
+//             try {
 
+//                 incidentService.assignIncident(
+//                         99999,
+//                         oncallEngineer,
+//                         reporter
+//                 );
 
-            // ============================================================
-            // 10. INCIDENT TIMELINE
-            // ============================================================
+//                 System.out.println(
+//                         "[FAIL] Expected IncidentNotFoundException"
+//                 );
 
-            System.out.println(
-                    "\n========== 10. INCIDENT TIMELINE =========="
-            );
+//             } catch (IncidentNotFoundException e) {
 
-            List<IncidentEvent> timeline =
-                    incidentService.getIncidentTimeline(
-                            incident.getId()
-                    );
+//                 System.out.println(
+//                         "[PASS] IncidentNotFoundException correctly thrown: "
+//                                 + e.getMessage()
+//                 );
+//             }
+
+
+//             // ============================================================
+//             // 8. BLANK STATUS NOTE
+//             // ============================================================
+
+//             System.out.println(
+//                     "\n========== 8. BLANK STATUS NOTE =========="
+//             );
+
+//             try {
+
+//                 incidentService.changeStatus(
+//                         incident.getId(),
+//                         Status.INVESTIGATING,
+//                         oncallEngineer,
+//                         "   "
+//                 );
+
+//                 System.out.println(
+//                         "[FAIL] Blank note was allowed"
+//                 );
 
-            System.out.println(
-                    "Total events: " + timeline.size()
-            );
+//             } catch (IllegalArgumentException e) {
+
+//                 System.out.println(
+//                         "[PASS] Blank note correctly rejected: "
+//                                 + e.getMessage()
+//                 );
+//             }
 
-            for (IncidentEvent event : timeline) {
+
+//             // ============================================================
+//             // 9. NULL NEW STATUS
+//             // ============================================================
+
+//             System.out.println(
+//                     "\n========== 9. NULL STATUS =========="
+//             );
+
+//             try {
 
-                System.out.println(
-                        event.getEventType()
-                                + " | "
-                                + event.getMessage()
-                                + " | by "
-                                + event.getCreatedBy().getName()
-                                + " | at "
-                                + event.getCreatedAt()
-                );
-            }
+//                 incidentService.changeStatus(
+//                         incident.getId(),
+//                         null,
+//                         oncallEngineer,
+//                         "Trying null status"
+//                 );
 
-            /*
-             * Expected events:
-             *
-             * 1. CREATED
-             * 2. ASSIGNED
-             * 3. STATUS_CHANGED -> INVESTIGATING
-             * 4. STATUS_CHANGED -> IDENTIFIED
-             * 5. STATUS_CHANGED -> MONITORING
-             * 6. STATUS_CHANGED -> RESOLVED
-             * 7. STATUS_CHANGED -> CLOSED
-             *
-             * Invalid operations should NOT create events.
-             */
+//                 System.out.println(
+//                         "[FAIL] Null status was allowed"
+//                 );
 
-            if (timeline.size() == 7) {
+//             } catch (IllegalArgumentException e) {
 
-                System.out.println(
-                        "[PASS] Timeline contains expected 7 events"
-                );
+//                 System.out.println(
+//                         "[PASS] Null status correctly rejected: "
+//                                 + e.getMessage()
+//                 );
+//             }
 
-            } else {
 
-                System.out.println(
-                        "[FAIL] Expected 7 events but found "
-                                + timeline.size()
-                );
-            }
+//             // ============================================================
+//             // 10. INCIDENT TIMELINE
+//             // ============================================================
 
+//             System.out.println(
+//                     "\n========== 10. INCIDENT TIMELINE =========="
+//             );
 
-            // ============================================================
-            // 11. GET INCIDENT
-            // ============================================================
+//             List<IncidentEvent> timeline =
+//                     incidentService.getIncidentTimeline(
+//                             incident.getId()
+//                     );
 
-            System.out.println(
-                    "\n========== 11. GET INCIDENT =========="
-            );
+//             System.out.println(
+//                     "Total events: " + timeline.size()
+//             );
 
-            Optional<Incident> fetched =
-                    incidentService.getIncident(
-                            incident.getId()
-                    );
+//             for (IncidentEvent event : timeline) {
 
-            if (fetched.isPresent()) {
+//                 System.out.println(
+//                         event.getEventType()
+//                                 + " | "
+//                                 + event.getMessage()
+//                                 + " | by "
+//                                 + event.getCreatedBy().getName()
+//                                 + " | at "
+//                                 + event.getCreatedAt()
+//                 );
+//             }
 
-                System.out.println(
-                        "[PASS] getIncident() found incident"
-                );
+//             /*
+//              * Expected events:
+//              *
+//              * 1. CREATED
+//              * 2. ASSIGNED
+//              * 3. STATUS_CHANGED -> INVESTIGATING
+//              * 4. STATUS_CHANGED -> IDENTIFIED
+//              * 5. STATUS_CHANGED -> MONITORING
+//              * 6. STATUS_CHANGED -> RESOLVED
+//              * 7. STATUS_CHANGED -> CLOSED
+//              *
+//              * Invalid operations should NOT create events.
+//              */
 
-                System.out.println(
-                        "Fetched: " + fetched.get()
-                );
+//             if (timeline.size() == 7) {
 
-            } else {
+//                 System.out.println(
+//                         "[PASS] Timeline contains expected 7 events"
+//                 );
 
-                System.out.println(
-                        "[FAIL] getIncident() did not find incident"
-                );
-            }
+//             } else {
 
+//                 System.out.println(
+//                         "[FAIL] Expected 7 events but found "
+//                                 + timeline.size()
+//                 );
+//             }
 
-            // ============================================================
-            // 12. GET ALL INCIDENTS
-            // ============================================================
 
-            System.out.println(
-                    "\n========== 12. GET ALL INCIDENTS =========="
-            );
+//             // ============================================================
+//             // 11. GET INCIDENT
+//             // ============================================================
 
-            List<Incident> all =
-                    incidentService.getAllIncidents();
+//             System.out.println(
+//                     "\n========== 11. GET INCIDENT =========="
+//             );
 
-            System.out.println(
-                    "Total incidents in database: "
-                            + all.size()
-            );
+//             Optional<Incident> fetched =
+//                     incidentService.getIncident(
+//                             incident.getId()
+//                     );
 
-            if (!all.isEmpty()) {
+//             if (fetched.isPresent()) {
 
-                System.out.println(
-                        "[PASS] getAllIncidents() returned data"
-                );
+//                 System.out.println(
+//                         "[PASS] getIncident() found incident"
+//                 );
 
-            } else {
+//                 System.out.println(
+//                         "Fetched: " + fetched.get()
+//                 );
 
-                System.out.println(
-                        "[FAIL] getAllIncidents() returned empty list"
-                );
-            }
+//             } else {
 
+//                 System.out.println(
+//                         "[FAIL] getIncident() did not find incident"
+//                 );
+//             }
 
-            // ============================================================
-            // FINISHED
-            // ============================================================
 
-            System.out.println("\n========================================");
-            System.out.println("SERVICE LAYER TEST COMPLETED");
-            System.out.println("========================================");
+//             // ============================================================
+//             // 12. GET ALL INCIDENTS
+//             // ============================================================
+
+//             System.out.println(
+//                     "\n========== 12. GET ALL INCIDENTS =========="
+//             );
+
+//             List<Incident> all =
+//                     incidentService.getAllIncidents();
+
+//             System.out.println(
+//                     "Total incidents in database: "
+//                             + all.size()
+//             );
+
+//             if (!all.isEmpty()) {
+
+//                 System.out.println(
+//                         "[PASS] getAllIncidents() returned data"
+//                 );
+
+//             } else {
+
+//                 System.out.println(
+//                         "[FAIL] getAllIncidents() returned empty list"
+//                 );
+//             }
+
+
+//             // ============================================================
+//             // FINISHED
+//             // ============================================================
+
+//             System.out.println("\n========================================");
+//             System.out.println("SERVICE LAYER TEST COMPLETED");
+//             System.out.println("========================================");
         
 
-         context.close();
-    }
-}
-}
+//          context.close();
+//     }
+// }
+// }
 
 

@@ -14,12 +14,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 public class GlobalExceptionHandler {
 
 
+//----------------------------------------------------------
 @ExceptionHandler({
         IncidentNotFoundException.class,
         UserNotFoundException.class
 })
 
-//----------------------------------------------------------
 public ResponseEntity<ErrorResponse> handleNotFound(RuntimeException exception) {
     ErrorResponse body = new ErrorResponse(
             LocalDateTime.now(),

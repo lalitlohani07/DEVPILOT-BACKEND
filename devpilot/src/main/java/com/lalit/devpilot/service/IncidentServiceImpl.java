@@ -213,10 +213,13 @@ public class IncidentServiceImpl implements IncidentService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<Incident> getIncident(int incidentId) {
-        return incidentRepository.findById(incidentId);
-    }
+@Transactional(readOnly = true)
+public Incident getIncident(int incidentId) {
+    return incidentRepository.findById(incidentId)
+            .orElseThrow(() -> new IncidentNotFoundException(
+                    "Incident not found with id: " + incidentId
+            ));
+}
 
     @Override
     @Transactional(readOnly = true)
