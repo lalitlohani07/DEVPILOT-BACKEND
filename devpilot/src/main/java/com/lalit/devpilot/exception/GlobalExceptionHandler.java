@@ -8,11 +8,15 @@ import com.lalit.devpilot.dto.ErrorResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.List;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+        private static final Logger log =
+        LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 //----------------------------------------------------------
 @ExceptionHandler({
@@ -70,6 +74,7 @@ public ResponseEntity<ErrorResponse> handleValidation(
 //------------------------------------------------------------
 @ExceptionHandler(Exception.class)
 public ResponseEntity<ErrorResponse> handleUnexpected(Exception exception) {
+    log.error("Unexpected error", exception);
 
     ErrorResponse body = new ErrorResponse(
             LocalDateTime.now(),
@@ -80,5 +85,17 @@ public ResponseEntity<ErrorResponse> handleUnexpected(Exception exception) {
 
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
 }
+@ExceptionHandler(DataIntegrityViolationException.class)
+public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(
+        DataIntegrityViolationException exception) {
 
+    ErrorResponse body = new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.CONFLICT.value(),
+            "Email already exists",
+            List.of()
+    );
+
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+}
 }
