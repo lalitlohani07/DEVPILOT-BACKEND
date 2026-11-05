@@ -6,14 +6,19 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.lalit.devpilot.dto.AssignIncidentRequest;
+import com.lalit.devpilot.dto.ChangeStatusRequest;
 import com.lalit.devpilot.dto.CreateIncidentRequest;
+import com.lalit.devpilot.dto.IncidentEventResponse;
 import com.lalit.devpilot.dto.IncidentResponse;
 import com.lalit.devpilot.model.Incident;
 import com.lalit.devpilot.model.User;
@@ -105,6 +110,34 @@ public ResponseEntity<IncidentResponse> getIncident(
                 assignedToName,
                 incident.getCreatedAt(),
                 incident.getUpdatedAt());
-    }
+ 
+           }
+
+           @PutMapping("/{id}/assignee")
+public IncidentResponse assign(@PathVariable int id,
+        @Valid @RequestBody AssignIncidentRequest request) {
+    return toResponse(incidentService.assignIncident(
+            id, request.assigneeId(), request.actorId()));
+}
+
+@PatchMapping("/{id}/status")
+public IncidentResponse changeStatus(@PathVariable int id,
+        @Valid @RequestBody ChangeStatusRequest request) {
+    return toResponse(incidentService.changeStatus(
+            id, request.status(), request.actorId(), request.note()));
+}
+
+@GetMapping("/{id}/events")
+public List<IncidentEventResponse> getTimeline(@PathVariable int id) {
+    return incidentService.getIncidentTimeline(id).stream()
+            .map(e -> new IncidentEventResponse(
+                    e.getId(),
+                    e.getEventType(),
+                    e.getMessage(),
+                    e.getCreatedBy().getId(),
+                    e.getCreatedBy().getName(),
+                    e.getCreatedAt()))
+            .toList();
+}
 }
 

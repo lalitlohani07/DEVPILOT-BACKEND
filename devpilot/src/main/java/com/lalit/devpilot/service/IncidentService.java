@@ -12,9 +12,8 @@ public interface IncidentService {
     Incident reportIncident(String title, String description,
                Severity severity, Integer reportedById);
 
-    Incident assignIncident(int incidentId, User assignee, User actor);
-
-    Incident changeStatus(int incidentId, Status newStatus, User actor, String note);
+   Incident assignIncident(int incidentId, int assigneeId, int actorId);
+Incident changeStatus(int incidentId, Status newStatus, int actorId, String note);
 
     Incident getIncident(int incidentId);
 

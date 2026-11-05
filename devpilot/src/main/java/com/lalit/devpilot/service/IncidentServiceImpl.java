@@ -106,6 +106,7 @@ public class IncidentServiceImpl implements IncidentService {
     @Transactional
     public Incident assignIncident(int incidentId, User assignee, User actor) {
 
+        
         Incident incident = incidentRepository.findById(incidentId)
                 .orElseThrow(() ->
                         new IncidentNotFoundException(
