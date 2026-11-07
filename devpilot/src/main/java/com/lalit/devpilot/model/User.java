@@ -55,9 +55,7 @@ protected User() {
     public int getId() {
         return id;
     }
-public void setId(int id) {
-        this.id = id;
-    }
+
     // getter and setter for name
     public String getName() {
         return name;
@@ -104,32 +102,23 @@ public void setId(int id) {
                 ", employmentStatus=" + employmentStatus +
                 '}';
     }
-    @Override
+ @Override
 public boolean equals(Object obj) {
-
-    
     if (this == obj) {
         return true;
     }
-
-    if (obj == null) {
+    if (!(obj instanceof User other)) {
         return false;
     }
-
-    if (getClass() != obj.getClass()) {
+    // getId(), not the field: on a Hibernate proxy the field is not filled in.
+    if (getId() == 0 || other.getId() == 0) {
         return false;
     }
-
-    User other = (User) obj;
-
-    if (this.id == 0 || other.id == 0) {
-        return false;
-    }
-    
-    return this.id == other.id;
+    return getId() == other.getId();
 }
+
 @Override
 public int hashCode() {
-    return Integer.hashCode(id);
+    return Integer.hashCode(getId());
 }
 }

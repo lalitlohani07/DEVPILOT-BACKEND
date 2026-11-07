@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,37 +103,37 @@ public class IncidentServiceImpl implements IncidentService {
 
     @Override
     @Transactional
-    public Incident assignIncident(int incidentId, User assignee, User actor) {
+public Incident assignIncident(int incidentId, int assigneeId, int actorId) {
 
-        
-        Incident incident = incidentRepository.findById(incidentId)
-                .orElseThrow(() ->
-                        new IncidentNotFoundException(
-                                "Incident not found: " + incidentId));
+    Incident incident = incidentRepository.findById(incidentId)
+            .orElseThrow(() ->
+                    new IncidentNotFoundException(
+                            "Incident not found: " + incidentId));
 
-        if (assignee == null) {
-            throw new IllegalArgumentException("Assignee cannot be null");
-        }
+    User assignee = userRepository.findById(assigneeId)
+            .orElseThrow(() -> new UserNotFoundException(assigneeId));
 
-        if (assignee.equals(incident.getAssignedTo())) {
-            throw new IllegalArgumentException(
-                    "Incident is already assigned to this user");
-        }
+    User actor = userRepository.findById(actorId)
+            .orElseThrow(() -> new UserNotFoundException(actorId));
 
-        incident.setAssignedTo(assignee);
-        incidentRepository.update(incident);
-
-        IncidentEvent event = new IncidentEvent(
-                incident,
-                EventType.ASSIGNED,
-                "Incident assigned to " + assignee.getName(),
-                actor);
-
-        incidentEventRepository.save(event);
-
-        return incident;
+    if (assignee.equals(incident.getAssignedTo())) {
+        throw new IllegalArgumentException(
+                "Incident is already assigned to this user");
     }
 
+    incident.setAssignedTo(assignee);
+    incidentRepository.update(incident);
+
+    IncidentEvent event = new IncidentEvent(
+            incident,
+            EventType.ASSIGNED,
+            "Incident assigned to " + assignee.getName(),
+            actor);
+
+    incidentEventRepository.save(event);
+
+    return incident;
+}
     private static final Map<Status, Set<Status>> ALLOWED_TRANSITIONS = Map.of(
             Status.OPEN, Set.of(
                     Status.INVESTIGATING,
@@ -160,58 +159,63 @@ public class IncidentServiceImpl implements IncidentService {
                     Status.INVESTIGATING));
 
     @Override
-    @Transactional
-    public Incident changeStatus(
-            int incidentId,
-            Status newStatus,
-            User actor,
-            String note) {
+@Transactional
+public Incident changeStatus(
+        int incidentId,
+        Status newStatus,
+        int actorId,
+        String note) {
 
-        // 1. Validate input
-        if (note == null || note.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Status change note cannot be blank");
-        }
-
-        if (newStatus == null) {
-            throw new IllegalArgumentException(
-                    "New status cannot be null");
-        }
-
-        // 2. Find the incident
-        Incident incident = incidentRepository.findById(incidentId)
-                .orElseThrow(() ->
-                        new IncidentNotFoundException(
-                                "Incident not found: " + incidentId));
-
-        // 3. Check whether the transition is allowed
-        Status currentStatus = incident.getStatus();
-        Set<Status> allowedTransitions =
-                ALLOWED_TRANSITIONS.get(currentStatus);
-
-        if (allowedTransitions == null
-                || !allowedTransitions.contains(newStatus)) {
-
-            throw new IllegalArgumentException(
-                    "Invalid status transition: "
-                            + currentStatus + " -> " + newStatus);
-        }
-
-        // 4. Update the incident
-        incident.setStatus(newStatus);
-        incidentRepository.update(incident);
-
-        // 5. Create and save the status-change event
-        IncidentEvent event = new IncidentEvent(
-                incident,
-                EventType.STATUS_CHANGED,
-                note,
-                actor);
-
-        incidentEventRepository.save(event);
-
-        return incident;
+    // 1. Validate input
+    if (note == null || note.isBlank()) {
+        throw new IllegalArgumentException(
+                "Status change note cannot be blank");
     }
+
+    if (newStatus == null) {
+        throw new IllegalArgumentException(
+                "New status cannot be null");
+    }
+
+    // 2. Find the incident
+    Incident incident = incidentRepository.findById(incidentId)
+            .orElseThrow(() ->
+                    new IncidentNotFoundException(
+                            "Incident not found: " + incidentId));
+
+    // 3. Find the actor
+    User actor = userRepository.findById(actorId)
+            .orElseThrow(() -> new UserNotFoundException(actorId));
+
+    // 4. Check whether the transition is allowed
+    Status currentStatus = incident.getStatus();
+
+    Set<Status> allowedTransitions =
+            ALLOWED_TRANSITIONS.get(currentStatus);
+
+    if (allowedTransitions == null
+            || !allowedTransitions.contains(newStatus)) {
+
+        throw new IllegalArgumentException(
+                "Invalid status transition: "
+                        + currentStatus + " -> " + newStatus);
+    }
+
+    // 5. Update the incident
+    incident.setStatus(newStatus);
+    incidentRepository.update(incident);
+
+    // 6. Create and save the event
+    IncidentEvent event = new IncidentEvent(
+            incident,
+            EventType.STATUS_CHANGED,
+            note,
+            actor);
+
+    incidentEventRepository.save(event);
+
+    return incident;
+}
 
     @Override
 @Transactional(readOnly = true)

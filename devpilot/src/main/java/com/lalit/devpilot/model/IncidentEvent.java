@@ -102,9 +102,9 @@ public class IncidentEvent {
 
     // TEMPORARY: used only by the JDBC IncidentEventRepositoryImpl.
     // Remove when IncidentEvent persistence moves to JPA.
-    public void setId(int id) {
-        this.id = id;
-    }
+    // public void setId(int id) {
+    //     this.id = id;
+    // }
 
     // Prints ids only for the relationships: with LAZY loading, printing the full
     // Incident/User could trigger extra queries or a LazyInitializationException.

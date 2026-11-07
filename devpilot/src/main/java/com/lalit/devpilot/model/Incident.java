@@ -87,9 +87,7 @@ private LocalDateTime updatedAt;
         this.updatedAt = updatedAt;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    
 
     public void setTitle(String title) {
         this.title = title;
@@ -149,49 +147,37 @@ private LocalDateTime updatedAt;
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
+
+   @Override
+public String toString() {
+    return "Incident{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", severity=" + severity +
+            ", status=" + status +
+            ", reportedById=" + (reportedBy == null ? null : reportedBy.getId()) +
+            ", assignedToId=" + (assignedTo == null ? null : assignedTo.getId()) +
+            ", createdAt=" + createdAt +
+            ", updatedAt=" + updatedAt +
+            '}';
 }
 
-public void setUpdatedAt(LocalDateTime updatedAt) {
-    this.updatedAt = updatedAt;
+   @Override
+public boolean equals(Object obj) {
+    if (this == obj) {
+        return true;
+    }
+    if (!(obj instanceof Incident other)) {
+        return false;
+    }
+    if (getId() == 0 || other.getId() == 0) {
+        return false;
+    }
+    return getId() == other.getId();
 }
-    @Override
-    public String toString() {
-        return "Incident{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description ='" + description + '\'' +
-                ",severity=" + severity +
-                ", status=" + status +
-                ", reportedBy ='" + reportedBy + '\'' +
-                ",assignedTo =" + assignedTo +
-                ", createdAt =" + createdAt +
-                ", updatedAt =" + updatedAt +
-                '}';
-    }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-
-        Incident other = (Incident) obj;
-
-        if (this.id == 0 || other.id == 0) {
-            return false;
-        }
-
-        return this.id == other.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Integer.hashCode(id);
-    }
+@Override
+public int hashCode() {
+    return Integer.hashCode(getId());
+}
 }
